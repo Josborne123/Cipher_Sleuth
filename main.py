@@ -68,18 +68,49 @@ def startScreen():
     instructions_textbox.insert("0.0", "Once you choose a level, you will be presented with 3 encrypted messages and your challenge is to decipher them.\n\nYou only have 3 lives and are allowed to request a maximum of 3 hints, however be warned as using hints will effect your final score.\n\nThere is no time limit, so go ahead and play.")
     instructions_textbox.configure(state="disabled") # Configuring the textbox so that it is read-only
 
+    def minimize_main(): # Function to minimize main window
+        window.wm_state('iconic')
+
 
     chooseLevel_label = customtkinter.CTkLabel(info_frame, text="Choose level", font=("Comic Sans MS bold", 30), fg_color=("#dbdbdb", "#2b2b2b"))
     chooseLevel_label.place(relx=0.5, rely=0.7, anchor="center")
 
-    level1_button = customtkinter.CTkButton(info_frame, text="Level 1", command=level1, fg_color="#32CD32", bg_color=("#dbdbdb", "#2b2b2b"), hover_color="#CD32CD", height=40, corner_radius=15) # Creating button for level 1
+    level1_button = customtkinter.CTkButton(info_frame, text="Level 1", command= lambda: [usernameScreen(level1), minimize_main()], fg_color="#32CD32", bg_color=("#dbdbdb", "#2b2b2b"), hover_color="#33A8FF", height=40, corner_radius=15) # Creating button for level 1
     level1_button.place(relx=0.07, rely=0.8)
 
-    level2_button = customtkinter.CTkButton(info_frame, text="Level 2", command=level2, fg_color="#FF8A33", bg_color=("#dbdbdb", "#2b2b2b"), hover_color="#33A8FF", height=40, corner_radius=15) # Creating button for level 2
+    level2_button = customtkinter.CTkButton(info_frame, text="Level 2", command= lambda: [usernameScreen(level2), minimize_main()], fg_color="#FF8A33", bg_color=("#dbdbdb", "#2b2b2b"), hover_color="#33A8FF", height=40, corner_radius=15) # Creating button for level 2
     level2_button.place(relx=0.4, rely=0.8)
 
-    level3_button = customtkinter.CTkButton(info_frame, text="Level 3", command=level3, fg_color="#E40202", bg_color=("#dbdbdb", "#2b2b2b"), hover_color="#7302E4", height=40, corner_radius=15) # Creating button for level 3
+    level3_button = customtkinter.CTkButton(info_frame, text="Level 3", command= lambda: [usernameScreen(level3), minimize_main()], fg_color="#E40202", bg_color=("#dbdbdb", "#2b2b2b"), hover_color="#33A8FF", height=40, corner_radius=15) # Creating button for level 3
     level3_button.place(relx=0.73, rely=0.8)
+
+
+def usernameScreen(level):
+    usernameScreen_window = customtkinter.CTkToplevel(window)
+    usernameScreen_window.geometry('400x200')
+    usernameScreen_window.title("Enter Username")
+
+    enterUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Enter Username:", font=("Comic Sans MS bold", 30), fg_color=("#dbdbdb", "#2b2b2b"))
+    enterUsername_label.place(relx=0.5, rely=0.15, anchor="center")
+
+    usernameEntry_entry = customtkinter.CTkEntry(usernameScreen_window, width=200, height=50, font=("Comic Sans MS", 15))
+    usernameEntry_entry.place(relx=0.5, rely=0.4, anchor="center")
+    
+    def get_data():
+        userUsername = usernameEntry_entry.get() # Getting the username in the program
+        usernameScreen_window.destroy()
+        #usernameScreen_window.wm_state('iconic') # Minimise the window.
+
+
+    # NOW NEED TO STORE THE USERNAME IN THE DATABASE
+
+
+
+
+
+    
+    usernameEntry_entry.bind("<Return>", (lambda event: [level(), get_data()])) # When enter button is pressed the relevant level will be played and the username entered will be returned to the program
+    
 
 
 
@@ -98,6 +129,8 @@ def level3():
     level3_window = customtkinter.CTkToplevel(window) # Creating level 3 window
     level3_window.geometry('800x600')
     level3_window.title("Cipher Sleuth - Level 3") 
+
+
 
 
 startScreen()
