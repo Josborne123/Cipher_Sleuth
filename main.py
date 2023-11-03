@@ -111,7 +111,6 @@ def usernameScreen(level):
     usernameEntry_entry = customtkinter.CTkEntry(usernameScreen_window, width=200, height=50, font=("Comic Sans MS", 15))
     usernameEntry_entry.place(relx=0.5, rely=0.5, anchor="center")
 
-    
     def get_data(): # Returning the username function
         global userUsername 
         userUsername = usernameEntry_entry.get() 
