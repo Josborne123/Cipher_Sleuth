@@ -92,7 +92,7 @@ def usernameScreen(level):
         db = mysql.connect( # Connecting to database
             host = "localhost",
             user = "root",
-            passwd = "johnsql123",
+            passwd = "",
             database = "CipherUserData"
         )
         
