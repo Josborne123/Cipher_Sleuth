@@ -87,7 +87,6 @@ def startScreen():
 
 
 def usernameScreen(level):
-<<<<<<< HEAD
 
     def storeUsername(userUsername):
         db = mysql.connect( # Connecting to database
@@ -102,13 +101,10 @@ def usernameScreen(level):
         db.commit() # Saving username to database
         db.close() # Closing the connection
 
-=======
->>>>>>> 567b1245a90ca2541331eaa64e43ccecb393a4d9
     usernameScreen_window = customtkinter.CTkToplevel(window)
     usernameScreen_window.geometry('400x200')
     usernameScreen_window.title("Enter Username")
 
-<<<<<<< HEAD
     enterUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Enter Username:", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
     enterUsername_label.place(relx=0.5, rely=0.15, anchor="center")
 
@@ -123,31 +119,6 @@ def usernameScreen(level):
  
     usernameEntry_entry.bind("<Return>", (lambda event: [level(), get_data()])) # When enter button is pressed the relevant level will be played and the username entered will be returned to the program
     
-=======
-    enterUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Enter Username:", font=("Comic Sans MS bold", 30), fg_color=("#dbdbdb", "#2b2b2b"))
-    enterUsername_label.place(relx=0.5, rely=0.15, anchor="center")
-
-    usernameEntry_entry = customtkinter.CTkEntry(usernameScreen_window, width=200, height=50, font=("Comic Sans MS", 15))
-    usernameEntry_entry.place(relx=0.5, rely=0.4, anchor="center")
-    
-    def get_data():
-        userUsername = usernameEntry_entry.get() # Getting the username in the program
-        usernameScreen_window.destroy()
-        #usernameScreen_window.wm_state('iconic') # Minimise the window.
-
-
-    # NOW NEED TO STORE THE USERNAME IN THE DATABASE
-
-
-
-
-
-    
-    usernameEntry_entry.bind("<Return>", (lambda event: [level(), get_data()])) # When enter button is pressed the relevant level will be played and the username entered will be returned to the program
-    
-
-
->>>>>>> 567b1245a90ca2541331eaa64e43ccecb393a4d9
 
 def level1():
     level1_window = customtkinter.CTkToplevel(window) # Creating level 1 window
@@ -164,15 +135,6 @@ def level3():
     level3_window = customtkinter.CTkToplevel(window) # Creating level 3 window
     level3_window.geometry('800x600')
     level3_window.title("Cipher Sleuth - Level 3") 
-
-
-<<<<<<< HEAD
-=======
-
-
-startScreen()
-window.mainloop()  # Starting the program
->>>>>>> 567b1245a90ca2541331eaa64e43ccecb393a4d9
 
 
 startScreen()
