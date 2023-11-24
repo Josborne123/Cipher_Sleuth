@@ -122,9 +122,9 @@ def usernameScreen(level):
         for i in results:
             userNameArray.append(i[0])
 
-        if userUsername in userNameArray:
-            print("invalid")
-            
+        if userUsername in userNameArray: # If username is taken, tell the user to re-enter
+            invalidUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Username already taken. Please enter another", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424"))
+            invalidUsername_label.place(relx=0.5, rely=0.75, anchor="center")            
         
         elif userUsername not in userNameArray:
             storeUsername(userUsername) # If the username is valid then store it in the datbase
