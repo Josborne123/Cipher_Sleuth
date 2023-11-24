@@ -89,17 +89,48 @@ def startScreen():
 def usernameScreen(level):
 
     def storeUsername(userUsername):
+        level()
         db = mysql.connect( # Connecting to database
             host = "localhost",
             user = "root",
             passwd = "johnsql123",
             database = "CipherUserData"
         )
-        
-        cursor = db.cursor()
+
+        cursor = db.cursor() 
         cursor.execute("INSERT INTO userData (username) VALUES (%s)", (userUsername,))
         db.commit() # Saving username to database
         db.close() # Closing the connection
+        usernameScreen_window.destroy() # Closing username window
+
+
+    def validateUsername(): # Validating Username function
+        global userUsername 
+        userUsername = usernameEntry_entry.get() 
+
+        db = mysql.connect( # Connecting to database
+            host = "localhost",
+            user = "root",
+            passwd = "johnsql123",
+            database = "CipherUserData"
+        )
+
+        cursor = db.cursor()
+        cursor.execute("SELECT username FROM userData")
+        results = cursor.fetchall() 
+        userNameArray = []
+        for i in results:
+            userNameArray.append(i[0])
+
+        if userUsername in userNameArray:
+            print("invalid")
+            
+        
+        elif userUsername not in userNameArray:
+            storeUsername(userUsername) # If the username is valid then store it in the datbase
+
+        db.close()
+
 
     usernameScreen_window = customtkinter.CTkToplevel(window)
     usernameScreen_window.geometry('400x200')
@@ -110,21 +141,15 @@ def usernameScreen(level):
 
     usernameEntry_entry = customtkinter.CTkEntry(usernameScreen_window, width=200, height=50, font=("Comic Sans MS", 15))
     usernameEntry_entry.place(relx=0.5, rely=0.5, anchor="center")
-
-    def get_data(): # Returning the username function
-        global userUsername 
-        userUsername = usernameEntry_entry.get() 
-        usernameScreen_window.destroy()
-        storeUsername(userUsername)
  
-    usernameEntry_entry.bind("<Return>", (lambda event: [level(), get_data()])) # When enter button is pressed the relevant level will be played and the username entered will be returned to the program
+    usernameEntry_entry.bind("<Return>", (lambda event: validateUsername())) # When enter button is the username will be validated
     
 
 def level1():
     level1_window = customtkinter.CTkToplevel(window) # Creating level 1 window
     level1_window.geometry('800x600')
     level1_window.title("Cipher Sleuth - Level 1") 
-
+    
 def level2():
     level2_window = customtkinter.CTkToplevel(window) # Creating level 2 window
     level2_window.geometry('800x600')
