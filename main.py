@@ -148,7 +148,23 @@ def usernameScreen(level):
 def level1():
     level1_window = customtkinter.CTkToplevel(window) # Creating level 1 window
     level1_window.geometry('800x600')
-    level1_window.title("Cipher Sleuth - Level 1") 
+    level1_window.title("Cipher Sleuth - Level 1")
+
+    caesarCipher_label = customtkinter.CTkLabel(level1_window, text="Level 1 - Caesar Cipher", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
+    caesarCipher_label.place(relx=0.5, rely=0.075, anchor="center")
+
+
+    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line2_label.place(relx=0.5, rely=0.14, anchor="center")
+
+    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level1_window, text="This is an encryption method where each letter in a message is shifted by a fixed", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level1_window, text="number of positions in the alphabet For example with a shift of 3, A becomes D", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label1.place(relx=0.1, rely=0.16)
+    caesarCipherExplanation_label2.place(relx=0.1, rely=0.20)
+
+    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line2_label.place(relx=0.5, rely=0.265, anchor="center")
+
     
 def level2():
     level2_window = customtkinter.CTkToplevel(window) # Creating level 2 window
@@ -164,3 +180,13 @@ def level3():
 
 startScreen()
 window.mainloop()  # Starting the program
+
+
+
+
+
+# Code for the level1 window which i have temporarly removed
+#### The block of code below is causing an error when entering the username ####
+#caesarCipherExplanation = customtkinter.CTkTextbox(level1_window, font=("Comic Sans MS", 16), width=600, wrap="word", padx=10, pady=10, fg_color=("#dbdbdb", "#2b2b2b"), activate_scrollbars=False)
+#caesarCipherExplanation.place(relx=0.1, rel=0.2)
+#caesarCipherExplanation.insert("0.0", "Instructions ...")
