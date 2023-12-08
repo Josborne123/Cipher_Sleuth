@@ -10,8 +10,8 @@ import tkinter as tk
 import customtkinter
 from PIL import Image, ImageTk
 import mysql.connector as mysql
-
-
+import random
+from wonderwords import RandomSentence
 # Main Program
 window = customtkinter.CTk()  # Creating main app window
 window.geometry('800x600')  # Setting window size
@@ -129,7 +129,7 @@ def usernameScreen(level):
         elif userUsername not in userNameArray:
             storeUsername(userUsername) # If the username is valid (not already taken) then call the function to store it in the database
 
-        db.close()
+        db.close() # Closing database connection
 
 
     usernameScreen_window = customtkinter.CTkToplevel(window)
@@ -147,46 +147,95 @@ def usernameScreen(level):
 
 def level1():
     level1_window = customtkinter.CTkToplevel(window) # Creating level 1 window
-    level1_window.geometry('800x600')
+    level1_window.geometry('1000x800')
     level1_window.title("Cipher Sleuth - Level 1")
 
+    score_label = customtkinter.CTkLabel(level1_window, text="Score:", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    score_label.place(relx=0.95, rely=0.025, anchor="e")
+
     caesarCipher_label = customtkinter.CTkLabel(level1_window, text="Level 1 - Caesar Cipher", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
-    caesarCipher_label.place(relx=0.5, rely=0.075, anchor="center")
+    caesarCipher_label.place(relx=0.5, rely=0.05, anchor="center")
 
 
     line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
-    line2_label.place(relx=0.5, rely=0.14, anchor="center")
+    line2_label.place(relx=0.5, rely=0.1, anchor="center")
 
-    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level1_window, text="This is an encryption method where each letter in a message is shifted by a fixed", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level1_window, text="number of positions in the alphabet For example with a shift of 3, A becomes D", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label1.place(relx=0.1, rely=0.16)
-    caesarCipherExplanation_label2.place(relx=0.1, rely=0.20)
+    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level1_window, text="This is an encryption method where each letter in a message is shifted by a fixed", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level1_window, text="number of positions in the alphabet. For example with a shift of 3, A becomes D", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label1.place(relx=0.15, rely=0.125)
+    caesarCipherExplanation_label2.place(relx=0.15, rely=0.175)
 
     line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
-    line2_label.place(relx=0.5, rely=0.265, anchor="center")
+    line2_label.place(relx=0.5, rely=0.23, anchor="center")
 
+    encryptedMessage1_label = customtkinter.CTkLabel(level1_window, text="Encrypted Message 1 - ", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    userDecrypt1_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
+    encryptedMessage2_label = customtkinter.CTkLabel(level1_window, text="Encrypted Message 2 - ", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    userDecrypt2_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
+    encryptedMessage3_label = customtkinter.CTkLabel(level1_window, text="Encrypted Message 3 - ", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    userDecrypt3_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
+
+    encryptedMessage1_label.place(relx=0.1, rely=0.3)
+    encryptedMessage2_label.place(relx=0.1, rely=0.5)
+    encryptedMessage3_label.place(relx=0.1, rely=0.7)
+
+    userDecrypt1_entry.place(relx=0.325, rely=0.375)
+    userDecrypt2_entry.place(relx=0.325, rely=0.575)
+    userDecrypt3_entry.place(relx=0.325, rely=0.775)
+
+    checkMessage1_button = customtkinter.CTkButton(level1_window, text="Check", font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage1_button.place(relx=0.685, rely=0.375)
+
+    checkMessage2_button = customtkinter.CTkButton(level1_window, text="Check", font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage2_button.place(relx=0.685, rely=0.575)
     
+    checkMessage3_button = customtkinter.CTkButton(level1_window, text="Check", font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage3_button.place(relx=0.685, rely=0.775)
+
+
+    sentenceObj = RandomSentence()
+    for i in range(5):
+        message1 = sentenceObj.sentence()
+    print(message1)
+
+    def caesarCipher(message):
+        shift = random.randint(1,26)
+        encryptedMessage = []
+        for word in message.split():
+            encryptedWord = ""
+            for char in word:
+                if char.isalpha():
+                    # Shift only alphabetical characters
+                    offset = ord('a') if char.islower() else ord('A')
+                    encryptedWord += chr((ord(char) - offset + shift) % 26 + offset)
+                else:
+                    # Keep non-alphabetical characters unchanged
+                    encryptedWord += char
+            encryptedMessage.append(encryptedWord)
+
+        print(shift)
+        return ' '.join(encryptedMessage)
+    
+
+    encryptedSentence = caesarCipher(message1)    
+    print(encryptedSentence)
+
+
+
 def level2():
     level2_window = customtkinter.CTkToplevel(window) # Creating level 2 window
-    level2_window.geometry('800x600')
+    level2_window.geometry('1000x800')
     level2_window.title("Cipher Sleuth - Level 2") 
+
+
+
 
 
 def level3():
     level3_window = customtkinter.CTkToplevel(window) # Creating level 3 window
-    level3_window.geometry('800x600')
+    level3_window.geometry('1000x800')
     level3_window.title("Cipher Sleuth - Level 3") 
 
 
 startScreen()
 window.mainloop()  # Starting the program
-
-
-
-
-
-# Code for the level1 window which i have temporarly removed
-#### The block of code below is causing an error when entering the username ####
-#caesarCipherExplanation = customtkinter.CTkTextbox(level1_window, font=("Comic Sans MS", 16), width=600, wrap="word", padx=10, pady=10, fg_color=("#dbdbdb", "#2b2b2b"), activate_scrollbars=False)
-#caesarCipherExplanation.place(relx=0.1, rel=0.2)
-#caesarCipherExplanation.insert("0.0", "Instructions ...")
