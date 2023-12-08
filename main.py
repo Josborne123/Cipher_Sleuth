@@ -150,53 +150,10 @@ def level1():
     level1_window.geometry('1000x800')
     level1_window.title("Cipher Sleuth - Level 1")
 
-    score_label = customtkinter.CTkLabel(level1_window, text="Score:", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    score_label.place(relx=0.95, rely=0.025, anchor="e")
-
-    caesarCipher_label = customtkinter.CTkLabel(level1_window, text="Level 1 - Caesar Cipher", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
-    caesarCipher_label.place(relx=0.5, rely=0.05, anchor="center")
-
-
-    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
-    line2_label.place(relx=0.5, rely=0.1, anchor="center")
-
-    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level1_window, text="This is an encryption method where each letter in a message is shifted by a fixed", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level1_window, text="number of positions in the alphabet. For example with a shift of 3, A becomes D", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label1.place(relx=0.15, rely=0.125)
-    caesarCipherExplanation_label2.place(relx=0.15, rely=0.175)
-
-    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
-    line2_label.place(relx=0.5, rely=0.23, anchor="center")
-
-    encryptedMessage1_label = customtkinter.CTkLabel(level1_window, text="Encrypted Message 1 - ", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
-    userDecrypt1_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
-    encryptedMessage2_label = customtkinter.CTkLabel(level1_window, text="Encrypted Message 2 - ", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
-    userDecrypt2_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
-    encryptedMessage3_label = customtkinter.CTkLabel(level1_window, text="Encrypted Message 3 - ", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
-    userDecrypt3_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
-
-    encryptedMessage1_label.place(relx=0.1, rely=0.3)
-    encryptedMessage2_label.place(relx=0.1, rely=0.5)
-    encryptedMessage3_label.place(relx=0.1, rely=0.7)
-
-    userDecrypt1_entry.place(relx=0.325, rely=0.375)
-    userDecrypt2_entry.place(relx=0.325, rely=0.575)
-    userDecrypt3_entry.place(relx=0.325, rely=0.775)
-
-    checkMessage1_button = customtkinter.CTkButton(level1_window, text="Check", font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
-    checkMessage1_button.place(relx=0.685, rely=0.375)
-
-    checkMessage2_button = customtkinter.CTkButton(level1_window, text="Check", font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
-    checkMessage2_button.place(relx=0.685, rely=0.575)
-    
-    checkMessage3_button = customtkinter.CTkButton(level1_window, text="Check", font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
-    checkMessage3_button.place(relx=0.685, rely=0.775)
-
-
     sentenceObj = RandomSentence()
-    for i in range(5):
-        message1 = sentenceObj.sentence()
-    print(message1)
+    unencryptedMessage1 = sentenceObj.bare_bone_sentence()
+    unencryptedMessage2 = sentenceObj.simple_sentence()
+    unencryptedMessage3 = sentenceObj.sentence()
 
     def caesarCipher(message):
         shift = random.randint(1,26)
@@ -213,12 +170,111 @@ def level1():
                     encryptedWord += char
             encryptedMessage.append(encryptedWord)
 
-        print(shift)
-        return ' '.join(encryptedMessage)
+
+        encryptedMessage = ' '.join(encryptedMessage)
+        return encryptedMessage, shift
     
 
-    encryptedSentence = caesarCipher(message1)    
-    print(encryptedSentence)
+    encryptedSentence1, shiftM1 = caesarCipher(unencryptedMessage1)
+    encryptedSentence2, shiftM2 = caesarCipher(unencryptedMessage2)
+    encryptedSentence3, shiftM3 = caesarCipher(unencryptedMessage3)
+
+    score_label = customtkinter.CTkLabel(level1_window, text="Score:", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    score_label.place(relx=0.95, rely=0.025, anchor="e")
+
+    caesarCipher_label = customtkinter.CTkLabel(level1_window, text="Level 1 - Caesar Cipher", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
+    caesarCipher_label.place(relx=0.5, rely=0.05, anchor="center")
+
+    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line2_label.place(relx=0.5, rely=0.1, anchor="center")
+
+    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level1_window, text="This is an encryption method where each letter in a message is shifted by a fixed", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label1.place(relx=0.15, rely=0.125)
+
+    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level1_window, text="number of positions in the alphabet. For example with a shift of 3, A becomes D", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label2.place(relx=0.15, rely=0.175)
+
+    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line2_label.place(relx=0.5, rely=0.23, anchor="center")
+
+    encryptedMessage1_label = customtkinter.CTkLabel(level1_window, text=f"Encrypted Message 1 - {encryptedSentence1}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    encryptedMessage1_label.place(relx=0.1, rely=0.3)
+
+    userDecrypt1_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
+    userDecrypt1_entry.place(relx=0.325, rely=0.375)
+
+    encryptedMessage2_label = customtkinter.CTkLabel(level1_window, text=f"Encrypted Message 2 - {encryptedSentence2}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    encryptedMessage2_label.place(relx=0.1, rely=0.5)
+
+    userDecrypt2_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
+    userDecrypt2_entry.place(relx=0.325, rely=0.575)
+
+    encryptedMessage3_label = customtkinter.CTkLabel(level1_window, text=f"Encrypted Message 3 - {encryptedSentence3}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    encryptedMessage3_label.place(relx=0.1, rely=0.7)
+
+    userDecrypt3_entry = customtkinter.CTkEntry(level1_window, width=350, height=30, font=("Comic Sans MS", 16))
+    userDecrypt3_entry.place(relx=0.325, rely=0.775)
+
+    checkMessage1_button = customtkinter.CTkButton(level1_window, text="Check", command= lambda: checkAnswer1(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage1_button.place(relx=0.685, rely=0.375)
+
+    checkMessage2_button = customtkinter.CTkButton(level1_window, text="Check", command= lambda: checkAnswer2(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage2_button.place(relx=0.685, rely=0.575)
+    
+    checkMessage3_button = customtkinter.CTkButton(level1_window, text="Check", command= lambda: checkAnswer3(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage3_button.place(relx=0.685, rely=0.775)
+
+    hint1_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: requestHint1(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint1_button.place(relx=0.775, rely=0.375)
+
+    hint2_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: requestHint2(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint2_button.place(relx=0.775, rely=0.575)
+
+    hint3_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: requestHint3(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint3_button.place(relx=0.775, rely=0.775)
+
+
+    #### NEED TO IMPLEMENT SCORING SYSTEM.
+    def requestHint1(): 
+        encryptedMessage1_label.configure(text=f"Encrypted Message 1 - {encryptedSentence1} - Hint: Shift is {shiftM1}")
+    
+    def requestHint2():
+        encryptedMessage2_label.configure(text=f"Encrypted Message 2 - {encryptedSentence2} - Hint: Shift is {shiftM2}")
+
+    def requestHint3():
+        encryptedMessage3_label.configure(text=f"Encrypted Message 3 - {encryptedSentence3} - Hint: Shift is {shiftM3}")
+
+    def checkAnswer1():
+        userDecrypt1 = userDecrypt1_entry.get()
+        if userDecrypt1 == unencryptedMessage1:
+            checkMessage1_button.place_forget()
+            hint1_button.place_forget()
+            correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+            correct_label.place(relx=0.685, rely=0.375)
+        else:
+            print("say something about it being incorrect.")
+
+    def checkAnswer2():
+        userDecrypt2 = userDecrypt2_entry.get()
+        if userDecrypt2 == unencryptedMessage2:
+            checkMessage2_button.place_forget()
+            hint2_button.place_forget()
+            correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+            correct_label.place(relx=0.685, rely=0.575)
+        else:
+            print("say something about it being incorrect.")
+
+    def checkAnswer3():
+        userDecrypt3 = userDecrypt3_entry.get()
+        if userDecrypt3 == unencryptedMessage3:
+            checkMessage3_button.place_forget()
+            hint3_button.place_forget()
+            correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+            correct_label.place(relx=0.685, rely=0.775)
+        else:
+            print("say something about it being incorrect.")
+
+        
 
 
 
