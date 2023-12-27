@@ -11,7 +11,9 @@ import customtkinter
 from PIL import Image, ImageTk
 import mysql.connector as mysql
 import random
-from wonderwords import RandomSentence
+from wonderwords import RandomSentence, RandomWord
+from dataclasses import dataclass
+
 # Main Program
 window = customtkinter.CTk()  # Creating main app window
 window.geometry('800x600')  # Setting window size
@@ -23,6 +25,8 @@ customtkinter.set_appearance_mode("dark")
 background_image = customtkinter.CTkImage(light_image=Image.open("Images/background-light.jpg"), dark_image=Image.open("Images/background-dark.jpg"), size=(800,600))
 backgroundImage_label = customtkinter.CTkLabel(window, image=background_image, text="")
 backgroundImage_label.place(relx=0,rely=0)
+
+score = 1000
 
 def startScreen():
 
@@ -61,12 +65,12 @@ def startScreen():
 
 
 
-    instructions_frame = customtkinter.CTkFrame(info_frame, width=600, height=175) # Creating a frame, where the instructions will go
+    instructions_frame = customtkinter.CTkFrame(info_frame, width=600, height=200) # Creating a frame, where the instructions will go
     instructions_frame.place(relx=0.05, rely=0.2)
 
-    instructions_textbox = customtkinter.CTkTextbox(instructions_frame, font=("Comic Sans MS", 16), width=600, wrap="word", padx=10, pady=10, fg_color=("#dbdbdb", "#2b2b2b"), activate_scrollbars=False) # Create the textbox which will contain the instructions
+    instructions_textbox = customtkinter.CTkTextbox(instructions_frame, font=("Comic Sans MS", 16), width=600, wrap="word", fg_color=("#dbdbdb", "#2b2b2b"), activate_scrollbars=False) # Create the textbox which will contain the instructions
     instructions_textbox.place(relx=0,rely=0)
-    instructions_textbox.insert("0.0", "Once you choose a level, you will be presented with 3 encrypted messages and your challenge is to decipher them.\n\nYou only have 3 lives and are allowed to request a maximum of 3 hints, however be warned as using hints will effect your final score.\n\nThere is no time limit, so go ahead and play.")
+    instructions_textbox.insert("0.0", "Once you choose a level, you will be presented with 3 encrypted messages and your challenge is to decipher them.\n\nYou have unlimited lives and are allowed to request a maximum of 3 hints, however be warned as using hints and getting questions wrong will effect your final score.\n\nThere is no time limit, so go ahead and play.")
     instructions_textbox.configure(state="disabled") # Configuring the textbox so that it is read-only
 
     def minimize_main(): # Function to minimize main window
@@ -151,7 +155,8 @@ def level1():
     level1_window.title("Cipher Sleuth - Level 1")
 
     sentenceObj = RandomSentence()
-    unencryptedMessage1 = sentenceObj.bare_bone_sentence()
+    wordObj = RandomWord()
+    unencryptedMessage1 = wordObj.word()
     unencryptedMessage2 = sentenceObj.simple_sentence()
     unencryptedMessage3 = sentenceObj.sentence()
 
@@ -179,7 +184,7 @@ def level1():
     encryptedSentence2, shiftM2 = caesarCipher(unencryptedMessage2)
     encryptedSentence3, shiftM3 = caesarCipher(unencryptedMessage3)
 
-    score_label = customtkinter.CTkLabel(level1_window, text="Score:", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    score_label = customtkinter.CTkLabel(level1_window, text="Score: 0", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
     score_label.place(relx=0.95, rely=0.025, anchor="e")
 
     caesarCipher_label = customtkinter.CTkLabel(level1_window, text="Level 1 - Caesar Cipher", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
@@ -196,6 +201,9 @@ def level1():
 
     line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
     line2_label.place(relx=0.5, rely=0.23, anchor="center")
+
+    alphabet_label = customtkinter.CTkLabel(level1_window, text="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    alphabet_label.place(relx=0.25, rely=0.25)
 
     encryptedMessage1_label = customtkinter.CTkLabel(level1_window, text=f"Encrypted Message 1 - {encryptedSentence1}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
     encryptedMessage1_label.place(relx=0.1, rely=0.3)
@@ -224,25 +232,36 @@ def level1():
     checkMessage3_button = customtkinter.CTkButton(level1_window, text="Check", command= lambda: checkAnswer3(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
     checkMessage3_button.place(relx=0.685, rely=0.775)
 
-    hint1_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: requestHint1(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint1_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: [requestHint1(), updateScoreHint()], font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
     hint1_button.place(relx=0.775, rely=0.375)
 
-    hint2_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: requestHint2(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint2_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: [requestHint2(), updateScoreHint()], font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
     hint2_button.place(relx=0.775, rely=0.575)
 
-    hint3_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: requestHint3(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint3_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: [requestHint3(), updateScoreHint()], font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
     hint3_button.place(relx=0.775, rely=0.775)
 
+    def updateScoreHint():
+        global score
+        score = score / 5
 
-    #### NEED TO IMPLEMENT SCORING SYSTEM.
+    def updateScoreLabel(score):
+        score_label.configure(text=f"Score: {int(score)}")
+
+
     def requestHint1(): 
-        encryptedMessage1_label.configure(text=f"Encrypted Message 1 - {encryptedSentence1} - Hint: Shift is {shiftM1}")
+        encryptedMessage1_label.configure(text=f"Encrypted Message 1 - {encryptedSentence1} - Hint: Shifted by {shiftM1}")
+        hint1_button.place_forget()
     
     def requestHint2():
-        encryptedMessage2_label.configure(text=f"Encrypted Message 2 - {encryptedSentence2} - Hint: Shift is {shiftM2}")
+        encryptedMessage2_label.configure(text=f"Encrypted Message 2 - {encryptedSentence2} - Hint: Shifted by {shiftM2}")
+        hint2_button.place_forget()
 
     def requestHint3():
-        encryptedMessage3_label.configure(text=f"Encrypted Message 3 - {encryptedSentence3} - Hint: Shift is {shiftM3}")
+        encryptedMessage3_label.configure(text=f"Encrypted Message 3 - {encryptedSentence3} - Hint: Shifted by {shiftM3}")
+        hint3_button.place_forget()
+
+    incorrect_label = customtkinter.CTkLabel(level1_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
 
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get()
@@ -251,8 +270,13 @@ def level1():
             hint1_button.place_forget()
             correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.375)
+            global score
+            score += 1000
+            updateScoreLabel(score)
+            incorrect_label.place_forget()
         else:
-            print("say something about it being incorrect.")
+            incorrect_label.place(relx=0.425, rely=0.415)
+            score = score / 5
 
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
@@ -261,8 +285,13 @@ def level1():
             hint2_button.place_forget()
             correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.575)
+            global score
+            score += 2000
+            updateScoreLabel(score)
+            incorrect_label.place_forget()
         else:
-            print("say something about it being incorrect.")
+            incorrect_label.place(relx=0.425, rely=0.615)
+            score = score / 5
 
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
@@ -271,12 +300,36 @@ def level1():
             hint3_button.place_forget()
             correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.775)
+            global score
+            score += 3000
+            updateScoreLabel(score)
+            incorrect_label.place_forget()
         else:
-            print("say something about it being incorrect.")
+            incorrect_label.place(relx=0.425, rely=0.815)
+            score = score / 5
 
-        
 
+    finished_button = customtkinter.CTkButton(level1_window, text="Finished?", command=lambda: saveScore(), font=("Comic Sans MS", 18), width=175, height=50, corner_radius=15, fg_color="#e8a717", hover_color="#33A8FF")
+    finished_button.place(relx=0.5, rely=0.9, anchor="center")
 
+    def saveScore():
+        global userUsername 
+        global score
+        db = mysql.connect( # Connecting to database
+            host = "localhost",
+            user = "root",
+            passwd = "johnsql123",
+            database = "CipherUserData"
+        )
+
+        cursor = db.cursor()
+        sql_update = "UPDATE userData SET score = (%s) WHERE username = (%s)"
+        cursor.execute(sql_update, (score, userUsername))
+        db.commit() # Saving username to database
+        db.close() # Closing the connection
+
+        level1_window.wm_state('iconic')
+        leaderboard()
 
 def level2():
     level2_window = customtkinter.CTkToplevel(window) # Creating level 2 window
@@ -285,13 +338,52 @@ def level2():
 
 
 
-
-
 def level3():
     level3_window = customtkinter.CTkToplevel(window) # Creating level 3 window
     level3_window.geometry('1000x800')
     level3_window.title("Cipher Sleuth - Level 3") 
 
+
+def leaderboard():
+    leaderboard_window = customtkinter.CTkToplevel(window)
+    leaderboard_window.geometry('800x600')
+    leaderboard_window.title("Leaderboard")
+
+    title_label = customtkinter.CTkLabel(leaderboard_window, text="Leaderboard", font=("Comic Sans MS bold", 40), fg_color=("#dbdbdb", "#2b2b2b"))
+    title_label.place(relx=0.5, rely=0.08, anchor="center")
+
+    db = mysql.connect( # Connecting to database
+        host = "localhost",
+        user = "root",
+        passwd = "johnsql123",
+        database = "CipherUserData"
+    )
+
+    cursor = db.cursor()
+    cursor.execute("SELECT username, score FROM userData ORDER BY score DESC limit 3")
+    results = cursor.fetchall()
+    @dataclass
+    class userLeaderboardData:
+        username: str
+        score: int
+
+    leaderboardArray = []
+
+    for i in results:
+        username = i[0]
+        score = i[1]
+        leaderboardArray.append(userLeaderboardData(username,score))
+
+    db.close()
+
+    firstplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"1     {leaderboardArray[0].username}     {leaderboardArray[0].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    firstplace_label.place(relx=0.5, rely=0.2, anchor="center")
+    
+    secondplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"2     {leaderboardArray[1].username}     {leaderboardArray[1].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    secondplace_label.place(relx=0.1, rely=0.3, anchor="w")
+
+    thirdplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"3     {leaderboardArray[2].username}     {leaderboardArray[2].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    thirdplace_label.place(relx=0.9, rely=0.3, anchor="e")
 
 startScreen()
 window.mainloop()  # Starting the program
