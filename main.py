@@ -360,7 +360,7 @@ def leaderboard():
     )
 
     cursor = db.cursor()
-    cursor.execute("SELECT username, score FROM userData ORDER BY score DESC limit 3")
+    cursor.execute("SELECT username, score FROM userData ORDER BY score DESC")
     results = cursor.fetchall()
     @dataclass
     class userLeaderboardData:
@@ -376,6 +376,28 @@ def leaderboard():
 
     db.close()
 
+    global userUsername
+    
+    # Binary Search 
+    position = -1
+    lower_pointer = 0
+    upper_pointer = len(leaderboardArray)
+    found = False
+    target = userUsername
+    while found != True and (lower_pointer <= upper_pointer):
+        mid_pointer = int((lower_pointer + upper_pointer)/2)
+        if leaderboardArray[mid_pointer].username == target:
+            position = mid_pointer
+            found = True
+        elif leaderboardArray[mid_pointer].username < target:
+            lower_pointer = mid_pointer + 1
+        else:
+            upper_pointer = mid_pointer - 1
+
+    position += 1 # As it will index from 0 
+    print(position)
+
+
     firstplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"1     {leaderboardArray[0].username}     {leaderboardArray[0].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
     firstplace_label.place(relx=0.5, rely=0.2, anchor="center")
     
@@ -384,6 +406,40 @@ def leaderboard():
 
     thirdplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"3     {leaderboardArray[2].username}     {leaderboardArray[2].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
     thirdplace_label.place(relx=0.9, rely=0.3, anchor="e")
+
+    fourthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"4     {leaderboardArray[3].username}     {leaderboardArray[3].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    fourthplace_label.place(relx=0.5, rely=0.375, anchor="center")
+
+    fifthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"5     {leaderboardArray[4].username}     {leaderboardArray[4].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    fifthplace_label.place(relx=0.5, rely=0.45, anchor="center")
+
+    sixthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"6     {leaderboardArray[5].username}     {leaderboardArray[5].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    sixthplace_label.place(relx=0.5, rely=0.525, anchor="center")
+
+    seventhplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"7     {leaderboardArray[6].username}     {leaderboardArray[6].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    seventhplace_label.place(relx=0.5, rely=0.6, anchor="center")
+
+    eighthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"8     {leaderboardArray[7].username}     {leaderboardArray[7].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    eighthplace_label.place(relx=0.5, rely=0.675, anchor="center")
+
+    ninthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"9     {leaderboardArray[8].username}     {leaderboardArray[8].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    ninthplace_label.place(relx=0.5, rely=0.75, anchor="center")
+
+    tenthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"10     {leaderboardArray[9].username}     {leaderboardArray[9].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    tenthplace_label.place(relx=0.5, rely=0.825, anchor="center")
+
+    positionText = ""
+    if position == 1:
+        positionText = "1st"
+    elif position == 2:
+        positionText = "2nd"
+    elif position == 3:
+        positionText = "3rd"
+    else:
+        positionText = f"{position}th"
+
+    userplacing_label = customtkinter.CTkLabel(leaderboard_window, text=f"You placed {positionText}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
+    userplacing_label.place(relx=0.5, rely=0.9, anchor= "center")
 
 startScreen()
 window.mainloop()  # Starting the program
