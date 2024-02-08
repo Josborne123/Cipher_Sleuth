@@ -349,7 +349,7 @@ def leaderboard():
     leaderboard_window.geometry('800x600')
     leaderboard_window.title("Leaderboard")
 
-    title_label = customtkinter.CTkLabel(leaderboard_window, text="Leaderboard", font=("Comic Sans MS bold", 40), fg_color=("#dbdbdb", "#2b2b2b"))
+    title_label = customtkinter.CTkLabel(leaderboard_window, text="Leaderboard", font=("Comic Sans MS bold", 40), fg_color=("#EBEBEB", "#2b2b2b"))
     title_label.place(relx=0.5, rely=0.08, anchor="center")
 
     db = mysql.connect( # Connecting to database
@@ -360,8 +360,9 @@ def leaderboard():
     )
 
     cursor = db.cursor()
-    cursor.execute("SELECT username, score FROM userData ORDER BY score DESC")
+    cursor.execute("SELECT username, score FROM userData ORDER BY score DESC, username")
     results = cursor.fetchall()
+
     @dataclass
     class userLeaderboardData:
         username: str
@@ -375,28 +376,26 @@ def leaderboard():
         leaderboardArray.append(userLeaderboardData(username,score))
 
     db.close()
-
-    global userUsername
     
-    # Binary Search 
-    position = -1
+    global userUsername
+
+    position = 0
+    target = userUsername
+    found = False
     lower_pointer = 0
     upper_pointer = len(leaderboardArray)
-    found = False
-    target = userUsername
-    while found != True and (lower_pointer <= upper_pointer):
+
+    while(found != True) and (lower_pointer <= upper_pointer):
         mid_pointer = int((lower_pointer + upper_pointer)/2)
-        if leaderboardArray[mid_pointer].username == target:
-            position = mid_pointer
+        if(leaderboardArray[mid_pointer].username == target):
             found = True
-        elif leaderboardArray[mid_pointer].username < target:
+            position = mid_pointer
+        elif(leaderboardArray[mid_pointer].username < target):
             lower_pointer = mid_pointer + 1
         else:
             upper_pointer = mid_pointer - 1
 
-    position += 1 # As it will index from 0 
-    print(position)
-
+    position += 1
 
     firstplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"1     {leaderboardArray[0].username}     {leaderboardArray[0].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
     firstplace_label.place(relx=0.5, rely=0.2, anchor="center")
@@ -423,7 +422,7 @@ def leaderboard():
     eighthplace_label.place(relx=0.5, rely=0.675, anchor="center")
 
     ninthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"9     {leaderboardArray[8].username}     {leaderboardArray[8].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
-    ninthplace_label.place(relx=0.5, rely=0.75, anchor="center")
+    ninthplace_label.place(relx=0.5, rely=0.75, anchor="center") 
 
     tenthplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"10     {leaderboardArray[9].username}     {leaderboardArray[9].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
     tenthplace_label.place(relx=0.5, rely=0.825, anchor="center")
