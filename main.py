@@ -162,20 +162,20 @@ def level1():
     unencryptedMessage3 = sentenceObj.sentence() # Gererating a random more complex sentence 
 
     def caesarCipher(message): # Function which will encrypt the generate word / sentence using the Caesar Cipher
-        shift = random.randint(1,26)
-        encryptedMessage = []
-        for word in message.split():
-            encryptedWord = ""
-            for char in word:
-                if char.isalpha():
-                    offset = ord('a') if char.islower() else ord('A')
-                    encryptedWord += chr((ord(char) - offset + shift) % 26 + offset)
-                else:
+        shift = random.randint(1,26) # Generate a random shift
+        encryptedMessage = [] # Empty array to store the encrypted sentence
+        for word in message.split(): # Loop through each word in the message
+            encryptedWord = "" # Empty string to store encrypted word
+            for char in word: # Loop through each character in the message
+                if char.isalpha(): # If the current character is in the alphabet 
+                    offset = ord('a') if char.islower() else ord('A') # Find the offset based on whether the character is uppercase of lowercase
+                    encryptedWord += chr((ord(char) - offset + shift) % 26 + offset) # Apply the caesar cipher with the generated shift to the character and add it to the encryptedWord
+                else: # If the current character is not in the alphabet then just add it as it is to the list 
                     encryptedWord += char
-            encryptedMessage.append(encryptedWord)
+            encryptedMessage.append(encryptedWord) # Add the complete encrypted word to the encryptedMessage array
 
 
-        encryptedMessage = ' '.join(encryptedMessage)
+        encryptedMessage = ' '.join(encryptedMessage) # Add each word in the encryptedMessage array together to create one string
         return encryptedMessage, shift # Returning the encrypted message and shift used
     
     # Calling the caesarCipher procedure using the generated unencrypted messages and then storing the encrypted message and shift used
@@ -292,7 +292,7 @@ def level1():
             incorrect_label.place_forget() # Remove incorrect label if it is displayed.
         else: # If user is not correct
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
-            score = score / 5 # Update score
+            score = int(score / 2)# Update score
             updateScoreLabel(score)
 
 
@@ -309,7 +309,7 @@ def level1():
             incorrect_label.place_forget()
         else:
             incorrect_label.place(relx=0.425, rely=0.615)
-            score = score / 5
+            score = int(score / 2)
             updateScoreLabel(score)
 
 
@@ -326,7 +326,7 @@ def level1():
             incorrect_label.place_forget()
         else:
             incorrect_label.place(relx=0.425, rely=0.815)
-            score = score / 5
+            score = int(score / 2)
             updateScoreLabel(score)
 
     # Button for when the user has finished, once clicked it will call the saveSCore() procedure
@@ -385,17 +385,17 @@ def level2():
     alphabet_label.place(relx=0.25, rely=0.25)
 
 
-    def atbash_encrypt(text): # Function which will encrypt the generated word / sentence using the atbash cipher
-        encrypted_text = ""
-        for char in text:
-            if char.isalpha():
-                if char.isupper():
-                    encrypted_text += chr(90 - (ord(char) - 65))
-                else:
-                    encrypted_text += chr(122 - (ord(char) - 97))
-            else:
-                encrypted_text += char
-        return encrypted_text
+    def atbash_encrypt(message): # Function which will encrypt the generated word / sentence using the atbash cipher
+        encrypted_message = ""
+        for char in message:
+            if char.isalpha(): # Check the character is a letter in the alphabet
+                if char.isupper(): # If character is upper case
+                    encrypted_message += chr(90 - (ord(char) - 65))
+                else: # If character is lower case
+                    encrypted_message += chr(122 - (ord(char) - 97))
+            else: # If the character is a space or number (or not a letter), then it will just add the character how it is to the encrypted message
+                encrypted_message += char
+        return encrypted_message # Return the encrypted message
         
     sentenceObj = RandomSentence()
     wordObj = RandomWord()
@@ -461,7 +461,7 @@ def level2():
             incorrect_label.place_forget()
         else: # If user is not correct
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
-            score = score / 5 # Update score
+            score = int(score / 2) # Update score
             updateScoreLabel(score)
 
 
@@ -477,7 +477,7 @@ def level2():
             incorrect_label.place_forget()
         else:
             incorrect_label.place(relx=0.425, rely=0.615)
-            score = score / 5
+            score = int(score / 2)
             updateScoreLabel(score)
 
 
@@ -493,7 +493,7 @@ def level2():
             incorrect_label.place_forget()
         else:
             incorrect_label.place(relx=0.425, rely=0.815)
-            score = score / 5
+            score = int(score / 2)
             updateScoreLabel(score)
 
 
@@ -521,11 +521,163 @@ def level2():
         leaderboard() # Calling leaderboard() module
 
 
-
 def level3():
-    level3_window = customtkinter.CTkToplevel(window) # Creating level 3 window
+    # Setting up the window for level 3
+    level3_window = customtkinter.CTkToplevel(window)
     level3_window.geometry('1000x800')
     level3_window.title("Cipher Sleuth - Level 3") 
+
+    # Creating score label
+    score_label = customtkinter.CTkLabel(level3_window, text="Score: 0", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    score_label.place(relx=0.95, rely=0.025, anchor="e")
+
+    # Creating heading label
+    atbashCipher_label = customtkinter.CTkLabel(level3_window, text="Level 3 - Morse Code", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
+    atbashCipher_label.place(relx=0.5, rely=0.05, anchor="center")
+
+    # Creating 2 labels to explain the cipher
+    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level3_window, text="Morse code uses dots and dashes to represent letters, numbers", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label1.place(relx=0.25, rely=0.125)
+
+    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level3_window, text="and symbols. Each character has a different and unique pattern.", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    caesarCipherExplanation_label2.place(relx=0.25, rely=0.175)
+
+    morseCode_dictionary = { 'A':'.-', 'B':'-...', 'C':'-.-.', 'D':'-..', 'E':'.', 'F':'..-.', 'G':'--.', 'H':'....', 'I':'..', 'J':'.---', 'K':'-.-', 'L':'.-..', 'M':'--', 'N':'-.', 'O':'---', 'P':'.--.', 'Q':'--.-', 'R':'.-.', 'S':'...', 'T':'-', 'U':'..-', 'V':'...-', 'W':'.--', 'X':'-..-', 'Y':'-.--', 'Z':'--..', '1':'.----', '2':'..---', '3':'...--', '4':'....-', '5':'.....', '6':'-....', '7':'--...', '8':'---..', '9':'----.', '0':'-----', ', ':'--..--', '.':'.-.-.-', '?':'..--..', '/':'-..-.', '-':'-....-', '(':'-.--.', ')':'-.--.-'}
+    
+    sentenceObj = RandomSentence()
+    wordObj = RandomWord()
+    unencryptedMessage1 = wordObj.word() # Generating a random word
+    unencryptedMessage2 = sentenceObj.simple_sentence() # Generating a random sentence
+    unencryptedMessage3 = sentenceObj.simple_sentence() # Generating another random sentence
+
+    def morseCodeEncryption(message):
+        message = message.upper() # Set the message to uppercase
+        encrypted_message = ''
+        for char in message:
+            if char != ' ':
+                encrypted_message += morseCode_dictionary[char] + ' ' # Look up the corresponding morse code for the current character and store in encrypted_message
+            else:
+                encrypted_message += ' ' # Add a space to the encrypted message
+
+        return encrypted_message
+    
+    # Calling the morsecodeEncryption function and storing the encrypted message
+    encryptedMessage1 = morseCodeEncryption(unencryptedMessage1)
+    encryptedMessage2 = morseCodeEncryption(unencryptedMessage2)
+    encryptedMessage3 = morseCodeEncryption(unencryptedMessage3)
+
+ 
+    # Creating label to display encrypted message 1
+    encryptedMessage1_label = customtkinter.CTkLabel(level3_window, text=f"Encrypted Message 1: {encryptedMessage1}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    encryptedMessage1_label.place(relx=0.1, rely=0.3)
+
+    # Creating entry space for user's answer
+    userDecrypt1_entry = customtkinter.CTkEntry(level3_window, width=350, height=30, font=("Comic Sans MS", 16))
+    userDecrypt1_entry.place(relx=0.325, rely=0.375)
+
+    # Creating label to display encrypted messsage 2
+    encryptedMessage2_label = customtkinter.CTkLabel(level3_window, text=f"Encrypted Message 2: {encryptedMessage2}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    encryptedMessage2_label.place(relx=0.1, rely=0.5)
+
+    # Creating entry space for the user's answer
+    userDecrypt2_entry = customtkinter.CTkEntry(level3_window, width=350, height=30, font=("Comic Sans MS", 16))
+    userDecrypt2_entry.place(relx=0.325, rely=0.575)
+
+    # Creating label to display encrypted message 3
+    encryptedMessage3_label = customtkinter.CTkLabel(level3_window, text=f"Encrypted Message 3: {encryptedMessage3}", font=("Comic Sans MS", 20), fg_color=("#EBEBEA", "#252424"))
+    encryptedMessage3_label.place(relx=0.1, rely=0.7)
+
+    # Creating entry space for the user's answer
+    userDecrypt3_entry = customtkinter.CTkEntry(level3_window, width=350, height=30, font=("Comic Sans MS", 16))
+    userDecrypt3_entry.place(relx=0.325, rely=0.775)
+
+    # Creating 3 buttons to check the answer and calling the relevation procedure
+    checkMessage1_button = customtkinter.CTkButton(level3_window, text="Check", command= lambda: checkAnswer1(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage1_button.place(relx=0.685, rely=0.375)
+
+    checkMessage2_button = customtkinter.CTkButton(level3_window, text="Check", command= lambda: checkAnswer2(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage2_button.place(relx=0.685, rely=0.575)
+    
+    checkMessage3_button = customtkinter.CTkButton(level3_window, text="Check", command= lambda: checkAnswer3(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
+    checkMessage3_button.place(relx=0.685, rely=0.775)
+
+    def updateScoreLabel(score): # Update score to screen
+        score_label.configure(text=f"Score: {int(score)}")
+
+    # If the user guesses wrong then this label will display
+    incorrect_label = customtkinter.CTkLabel(level3_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+
+    # Following 3 procedures will check if the user's guess is correct
+    def checkAnswer1():
+        userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
+        if userDecrypt1 == unencryptedMessage1: # If the user is correct
+            checkMessage1_button.place_forget() # Remove the "Check" button
+            correct_label = customtkinter.CTkLabel(level3_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Display correct to the screen
+            correct_label.place(relx=0.685, rely=0.375)
+            global score
+            score += 2000 # Update score
+            updateScoreLabel(score)
+            incorrect_label.place_forget()
+        else: # If user is not correct
+            incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
+            score = int(score / 2) # Update score
+            updateScoreLabel(score)
+
+
+    def checkAnswer2():
+        userDecrypt2 = userDecrypt2_entry.get()
+        if userDecrypt2 == unencryptedMessage2:
+            checkMessage2_button.place_forget()
+            correct_label = customtkinter.CTkLabel(level3_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+            correct_label.place(relx=0.685, rely=0.575)
+            global score
+            score += 3000
+            updateScoreLabel(score)
+            incorrect_label.place_forget()
+        else:
+            incorrect_label.place(relx=0.425, rely=0.615)
+            score = int(score / 2)
+            updateScoreLabel(score)
+
+
+    def checkAnswer3():
+        userDecrypt3 = userDecrypt3_entry.get()
+        if userDecrypt3 == unencryptedMessage3:
+            checkMessage3_button.place_forget()
+            correct_label = customtkinter.CTkLabel(level3_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+            correct_label.place(relx=0.685, rely=0.775)
+            global score
+            score += 4000
+            updateScoreLabel(score)
+            incorrect_label.place_forget()
+        else:
+            incorrect_label.place(relx=0.425, rely=0.815)
+            score = int(score / 2)
+            updateScoreLabel(score)
+
+
+    # Creating button for when user is finished, once clicked it will call the saveScore() procedure
+    finished_button = customtkinter.CTkButton(level3_window, text="Finished?", command=lambda: saveScore(), font=("Comic Sans MS", 18), width=175, height=50, corner_radius=15, fg_color="#e8a717", hover_color="#33A8FF")
+    finished_button.place(relx=0.5, rely=0.9, anchor="center")
+
+    def saveScore():
+        global userUsername 
+        global score
+        db = mysql.connect( # Connecting to database
+            host = "localhost",
+            user = "root",
+            passwd = "johnsql123",
+            database = "CipherUserData"
+        )
+
+        cursor = db.cursor()
+        sql_update = "UPDATE userData SET score = (%s) WHERE username = (%s)" # Query
+        cursor.execute(sql_update, (score, userUsername)) # Executing query
+        db.commit() # Saving username to database
+        db.close() # Closing the connection
+
+        level3_window.wm_state('iconic') # Hiding the level2_window
+        leaderboard() # Calling leaderboard() module
 
 
 def leaderboard():
@@ -589,7 +741,6 @@ def leaderboard():
     position += 1
 
     # Creating 10 labels to display the top 10 players
-
     firstplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"1     {leaderboardArray[0].username}     {leaderboardArray[0].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
     firstplace_label.place(relx=0.5, rely=0.2, anchor="center")
     
@@ -633,8 +784,6 @@ def leaderboard():
     # Creating and displaying what position the current user came.
     userplacing_label = customtkinter.CTkLabel(leaderboard_window, text=f"You placed {positionText}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
     userplacing_label.place(relx=0.5, rely=0.9, anchor= "center")
-
-
 
 
 startScreen() # Calling startScreen module
