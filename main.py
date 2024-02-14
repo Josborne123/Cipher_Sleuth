@@ -13,6 +13,7 @@ import mysql.connector as mysql
 import random
 from wonderwords import RandomSentence, RandomWord
 from dataclasses import dataclass
+import pygame
 
 # Main Program
 window = customtkinter.CTk()  # Creating main app window
@@ -20,6 +21,8 @@ window.geometry('800x600')  # Setting window size
 window.title("Cipher Sleuth - Start Screen")  # Setting the title
 window.resizable(width=False, height=False) # Not allowing the window to be resized
 customtkinter.set_appearance_mode("dark")
+
+pygame.mixer.init()
 
 # Setting the background images
 background_image = customtkinter.CTkImage(light_image=Image.open("Images/background-light.jpg"), dark_image=Image.open("Images/background-dark.jpg"), size=(800,600))
@@ -62,8 +65,6 @@ def startScreen():
     #Note: Fonts aren't / don't work in Replit
     title_label = customtkinter.CTkLabel(info_frame, text="Cipher Sleuth", font=("Comic Sans MS bold", 40), fg_color=("#dbdbdb", "#2b2b2b"))
     title_label.place(relx=0.5, rely=0.08, anchor="center")
-
-
 
     instructions_frame = customtkinter.CTkFrame(info_frame, width=600, height=200) # Creating a frame, where the instructions will go
     instructions_frame.place(relx=0.05, rely=0.2)
@@ -183,6 +184,11 @@ def level1():
     encryptedSentence2, shiftM2 = caesarCipher(unencryptedMessage2)
     encryptedSentence3, shiftM3 = caesarCipher(unencryptedMessage3)
 
+    # Creating user label
+    global userUsername
+    user_label = customtkinter.CTkLabel(level1_window, text=f"User: {userUsername}", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    user_label.place(relx=0.025, rely=0.025, anchor="w")
+
     # Creating score label
     score_label = customtkinter.CTkLabel(level1_window, text="Score: 0", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
     score_label.place(relx=0.95, rely=0.025, anchor="e")
@@ -192,8 +198,8 @@ def level1():
     caesarCipher_label.place(relx=0.5, rely=0.05, anchor="center")
 
     # Creating a label to seperate elements on the screen
-    line2_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
-    line2_label.place(relx=0.5, rely=0.1, anchor="center")
+    line1_label = customtkinter.CTkLabel(level1_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line1_label.place(relx=0.5, rely=0.1, anchor="center")
 
     # Creating labels to explain the cipher
     caesarCipherExplanation_label1 = customtkinter.CTkLabel(level1_window, text="This is an encryption method where each letter in a message is shifted backwards by ", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
@@ -254,13 +260,13 @@ def level1():
     hint3_button = customtkinter.CTkButton(level1_window, text="Hint", command = lambda: [requestHint3(), updateScoreHint()], font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
     hint3_button.place(relx=0.775, rely=0.775)
 
-    def updateScoreHint(): # If the user uses a hint this function will be called and divide their current score by 5
-        global score
-        score = score / 5
-
     def updateScoreLabel(score): # Updating the user's score onto the screen
         score_label.configure(text=f"Score: {int(score)}")
 
+    def updateScoreHint(): # If the user uses a hint this function will be called and divide their current score by 5
+        global score
+        score = score / 5
+        updateScoreLabel(score)
 
     # The following 3 procedures will display a hint to the user by telling them the shift of the encryption
     def requestHint1(): 
@@ -288,11 +294,15 @@ def level1():
             correct_label.place(relx=0.685, rely=0.375)
             global score
             score += 1000 # Update score
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
             updateScoreLabel(score)
             incorrect_label.place_forget() # Remove incorrect label if it is displayed.
         else: # If user is not correct
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
             score = int(score / 2)# Update score
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
             updateScoreLabel(score)
 
 
@@ -307,10 +317,14 @@ def level1():
             score += 2000
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else:
             incorrect_label.place(relx=0.425, rely=0.615)
             score = int(score / 2)
             updateScoreLabel(score)
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
 
     def checkAnswer3():
@@ -324,10 +338,14 @@ def level1():
             score += 3000
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else:
             incorrect_label.place(relx=0.425, rely=0.815)
             score = int(score / 2)
             updateScoreLabel(score)
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
     # Button for when the user has finished, once clicked it will call the saveSCore() procedure
     finished_button = customtkinter.CTkButton(level1_window, text="Finished?", command=lambda: saveScore(), font=("Comic Sans MS", 18), width=175, height=50, corner_radius=15, fg_color="#e8a717", hover_color="#33A8FF")
@@ -352,11 +370,18 @@ def level1():
         level1_window.wm_state('iconic') # Hiding the level1 window
         leaderboard() # Calling the leaderboard screen 
 
+
+
 def level2():
     # Setting up the level2_window
     level2_window = customtkinter.CTkToplevel(window)
     level2_window.geometry('1000x800')
     level2_window.title("Cipher Sleuth - Level 2") 
+
+    # Creating user label
+    global userUsername
+    user_label = customtkinter.CTkLabel(level2_window, text=f"User: {userUsername}", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    user_label.place(relx=0.025, rely=0.025, anchor="w")
 
     # Creating score label
     score_label = customtkinter.CTkLabel(level2_window, text="Score: 0", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
@@ -367,15 +392,15 @@ def level2():
     atbashCipher_label.place(relx=0.5, rely=0.05, anchor="center")
 
     # Creating a label to divide elements on the screen
-    line2_label = customtkinter.CTkLabel(level2_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
-    line2_label.place(relx=0.5, rely=0.1, anchor="center")
+    line1_label = customtkinter.CTkLabel(level2_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line1_label.place(relx=0.5, rely=0.1, anchor="center")
 
     # Creating 2 labels to explain the cipher
-    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level2_window, text="This is a substitution cipher where each letter in the plaintext is replaced by its ", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label1.place(relx=0.15, rely=0.125)
+    atBashExplanation_label1 = customtkinter.CTkLabel(level2_window, text="This is a substitution cipher where each letter in the plaintext is replaced by its ", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    atBashExplanation_label1.place(relx=0.15, rely=0.125)
 
-    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level2_window, text="reverse in the alphabet For example, 'A' becomes 'Z', 'B' becomes 'Y', and so on.", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label2.place(relx=0.15, rely=0.175)
+    atBashExplanation_label2 = customtkinter.CTkLabel(level2_window, text="reverse in the alphabet For example, 'A' becomes 'Z', 'B' becomes 'Y', and so on.", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    atBashExplanation_label2.place(relx=0.15, rely=0.175)
 
     line2_label = customtkinter.CTkLabel(level2_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
     line2_label.place(relx=0.5, rely=0.23, anchor="center")
@@ -459,10 +484,14 @@ def level2():
             score += 1500 # Update score
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else: # If user is not correct
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
             score = int(score / 2) # Update score
             updateScoreLabel(score)
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
 
     def checkAnswer2():
@@ -475,10 +504,14 @@ def level2():
             score += 2500
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else:
             incorrect_label.place(relx=0.425, rely=0.615)
             score = int(score / 2)
             updateScoreLabel(score)
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
 
     def checkAnswer3():
@@ -491,11 +524,14 @@ def level2():
             score += 3500
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else:
             incorrect_label.place(relx=0.425, rely=0.815)
             score = int(score / 2)
             updateScoreLabel(score)
-
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
     # Creating button for when user is finished, once clicked it will call the saveScore() procedure
     finished_button = customtkinter.CTkButton(level2_window, text="Finished?", command=lambda: saveScore(), font=("Comic Sans MS", 18), width=175, height=50, corner_radius=15, fg_color="#e8a717", hover_color="#33A8FF")
@@ -521,26 +557,44 @@ def level2():
         leaderboard() # Calling leaderboard() module
 
 
+
 def level3():
     # Setting up the window for level 3
     level3_window = customtkinter.CTkToplevel(window)
     level3_window.geometry('1000x800')
     level3_window.title("Cipher Sleuth - Level 3") 
 
+    # Creating user label
+    global userUsername
+    user_label = customtkinter.CTkLabel(level3_window, text=f"User: {userUsername}", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    user_label.place(relx=0.025, rely=0.025, anchor="w")
+
     # Creating score label
     score_label = customtkinter.CTkLabel(level3_window, text="Score: 0", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
     score_label.place(relx=0.95, rely=0.025, anchor="e")
 
     # Creating heading label
-    atbashCipher_label = customtkinter.CTkLabel(level3_window, text="Level 3 - Morse Code", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
-    atbashCipher_label.place(relx=0.5, rely=0.05, anchor="center")
+    morseCodeTitle_label = customtkinter.CTkLabel(level3_window, text="Level 3 - Morse Code", font=("Comic Sans MS bold", 30), fg_color=("#EBEBEA", "#252424"))
+    morseCodeTitle_label.place(relx=0.5, rely=0.05, anchor="center")
+
+    # Creating a label to seperate elements on the screen
+    line1_label = customtkinter.CTkLabel(level3_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line1_label.place(relx=0.5, rely=0.1, anchor="center")
 
     # Creating 2 labels to explain the cipher
-    caesarCipherExplanation_label1 = customtkinter.CTkLabel(level3_window, text="Morse code uses dots and dashes to represent letters, numbers", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label1.place(relx=0.25, rely=0.125)
+    morseCodeExplanation_label1 = customtkinter.CTkLabel(level3_window, text="Morse code uses dots and dashes to represent letters, numbers", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    morseCodeExplanation_label1.place(relx=0.25, rely=0.125)
 
-    caesarCipherExplanation_label2 = customtkinter.CTkLabel(level3_window, text="and symbols. Each character has a different and unique pattern.", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
-    caesarCipherExplanation_label2.place(relx=0.25, rely=0.175)
+    morseCodeExplanation_label2 = customtkinter.CTkLabel(level3_window, text="and symbols. Each character has a different and unique pattern.", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    morseCodeExplanation_label2.place(relx=0.25, rely=0.175)
+
+    # Creating a label to seperate elements on the screen
+    line2_label = customtkinter.CTkLabel(level3_window, text="-------------------------", font=("Comic Sans MS bold", 23), fg_color=("#EBEBEA", "#252424"))
+    line2_label.place(relx=0.5, rely=0.23, anchor="center")
+
+    # Creating hint button which will cal the requestHint() and updateScoreHint() procedures
+    hint_button = customtkinter.CTkButton(level3_window, text="Hint - Cheat Sheet", command = lambda: [requestHint(), updateScoreHint()], font=("Comic Sans MS", 18), width=50, height=30, corner_radius=15, fg_color="#CD32CD", hover_color="#33A8FF")
+    hint_button.place(relx=0.405, rely=0.26)
 
     morseCode_dictionary = { 'A':'.-', 'B':'-...', 'C':'-.-.', 'D':'-..', 'E':'.', 'F':'..-.', 'G':'--.', 'H':'....', 'I':'..', 'J':'.---', 'K':'-.-', 'L':'.-..', 'M':'--', 'N':'-.', 'O':'---', 'P':'.--.', 'Q':'--.-', 'R':'.-.', 'S':'...', 'T':'-', 'U':'..-', 'V':'...-', 'W':'.--', 'X':'-..-', 'Y':'-.--', 'Z':'--..', '1':'.----', '2':'..---', '3':'...--', '4':'....-', '5':'.....', '6':'-....', '7':'--...', '8':'---..', '9':'----.', '0':'-----', ', ':'--..--', '.':'.-.-.-', '?':'..--..', '/':'-..-.', '-':'-....-', '(':'-.--.', ')':'-.--.-'}
     
@@ -601,6 +655,24 @@ def level3():
     checkMessage3_button = customtkinter.CTkButton(level3_window, text="Check", command= lambda: checkAnswer3(), font=("Comic Sans MS", 18), width=30, height=28, corner_radius=15, fg_color="#32CD32", hover_color="#33A8FF")
     checkMessage3_button.place(relx=0.685, rely=0.775)
 
+    def updateScoreHint():
+        global score
+        score = 0 # Setting user's score to 0 when hint is requested
+
+
+    def requestHint():
+        # Setting up the hint window
+        hint_window = customtkinter.CTkToplevel(window)
+        hint_window.geometry('700x500')
+        hint_window.title("Morse Code Cheat Sheet") 
+
+        # Setting the background image to be the morse code cheat sheet
+        background_image = customtkinter.CTkImage(light_image=Image.open("Images/morsecode_cheatsheet.jpg"), size=(700,500))
+        backgroundImage_label = customtkinter.CTkLabel(hint_window, image=background_image, text="")
+        backgroundImage_label.place(relx=0,rely=0)
+
+
+
     def updateScoreLabel(score): # Update score to screen
         score_label.configure(text=f"Score: {int(score)}")
 
@@ -618,11 +690,14 @@ def level3():
             score += 2000 # Update score
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else: # If user is not correct
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
             score = int(score / 2) # Update score
             updateScoreLabel(score)
-
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
@@ -634,10 +709,14 @@ def level3():
             score += 3000
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else:
             incorrect_label.place(relx=0.425, rely=0.615)
             score = int(score / 2)
             updateScoreLabel(score)
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
 
     def checkAnswer3():
@@ -650,10 +729,14 @@ def level3():
             score += 4000
             updateScoreLabel(score)
             incorrect_label.place_forget()
+            pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
         else:
             incorrect_label.place(relx=0.425, rely=0.815)
             score = int(score / 2)
             updateScoreLabel(score)
+            pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
+            pygame.mixer.music.play(loops=0) # Playing sounds
 
 
     # Creating button for when user is finished, once clicked it will call the saveScore() procedure
