@@ -1,10 +1,3 @@
-# Notes
-"""
-To delete everything from the userData table - DELETE FROM userData;
-To reset the AUTO_INCREMENT - ALTER TABLE userData AUTO_INCREMENT = 1;
-Select all data - SELECT * FROM userData;
-"""
-
 # Importing Modules
 import tkinter as tk
 import customtkinter
