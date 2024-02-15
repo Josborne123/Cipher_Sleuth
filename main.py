@@ -804,17 +804,17 @@ def leaderboard():
     lower_pointer = 0
     upper_pointer = len(leaderboardArray)
 
-    while(found != True) and (lower_pointer <= upper_pointer):
-        mid_pointer = int((lower_pointer + upper_pointer)/2)
-        if(leaderboardArray[mid_pointer].username == target):
+    while(found != True) and (lower_pointer <= upper_pointer): 
+        mid_pointer = int((lower_pointer + upper_pointer)/2) # Calculating the mid_pointer
+        if(leaderboardArray[mid_pointer].username == target): # If the username at the mid_pointer is equal to the target
             found = True
             position = mid_pointer
-        elif(leaderboardArray[mid_pointer].username < target):
-            lower_pointer = mid_pointer + 1
+        elif(leaderboardArray[mid_pointer].username < target): # If the username at the mid_pointer is less than the target 
+            lower_pointer = mid_pointer + 1 # Update the lower_pointer
         else:
-            upper_pointer = mid_pointer - 1
+            upper_pointer = mid_pointer - 1 # Update the upper_pointer
 
-    position += 1
+    position += 1 # Adding one to position, as the database id's start at 1 and not 0 
 
     # Creating 10 labels to display the top 10 players
     firstplace_label = customtkinter.CTkLabel(leaderboard_window, text=f"1     {leaderboardArray[0].username}     {leaderboardArray[0].score}", font=("Comic Sans MS", 25), fg_color=("#EBEBEA", "#252424"))
