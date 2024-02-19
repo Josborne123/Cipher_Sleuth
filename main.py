@@ -794,9 +794,6 @@ def leaderboard():
     
     global userUsername
 
-    # Note on this binary search
-    # I don't know the number exactly but when the database contains too many entries the binary search doesn't work for some reason 
-
     # Binary Search Algorithm to find the position of the current user
     position = 0
     target = userUsername
