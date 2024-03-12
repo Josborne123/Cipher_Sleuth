@@ -124,7 +124,7 @@ def usernameScreen(level):
         for i in results:
             userNameArray.append(i[0]) # Looping through the results and storing them in an array
 
-        if userUsername.isspace() == True: # If the userUsername is made up only of spaces (input validation)
+        if userUsername.isspace() == True or userUsername == "": # If the userUsername is made up only of spaces (input validation)
             invalidUsername_label.place_forget() # Remove this label 
             blankUsername_label.place(relx=0.5, rely=0.75, anchor="center") # Place this label 
 
@@ -289,7 +289,7 @@ def level1():
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
 
-        if userDecrypt1.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt1.isspace() == True or userDecrypt1 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.415) # Place this label 
 
@@ -318,7 +318,7 @@ def level1():
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
 
-        if userDecrypt2.isspace() == True: # If the user's answer only contains spaces
+        if userDecrypt2.isspace() == True or userDecrypt2 == "": # If the user's answer only contains spaces
             incorrect_label.place_forget() # Remove this label
             invalid_label.place(relx=0.425, rely=0.615) # Place this label 
 
@@ -347,7 +347,7 @@ def level1():
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
 
-        if userDecrypt3.isspace() == True: # If the user's answer only contains spaces
+        if userDecrypt3.isspace() == True or userDecrypt3 == "": # If the user's answer only contains spaces
             incorrect_label.place_forget() # Remove this label
             invalid_label.place(relx=0.425, rely=0.815) # Place this label 
 
@@ -503,7 +503,7 @@ def level2():
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
 
-        if userDecrypt1.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt1.isspace() == True  or userDecrypt1 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.415) # Place this label 
 
@@ -531,7 +531,7 @@ def level2():
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
 
-        if userDecrypt2.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt2.isspace() == True or userDecrypt2 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.615) # Place this label 
 
@@ -559,7 +559,7 @@ def level2():
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
 
-        if userDecrypt3.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt3.isspace() == True or userDecrypt3 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.815) # Place this label 
 
@@ -733,7 +733,7 @@ def level3():
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
 
-        if userDecrypt1.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt1.isspace() == True or userDecrypt1 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.415) # Place this label 
 
@@ -760,7 +760,7 @@ def level3():
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
 
-        if userDecrypt2.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt2.isspace() == True or userDecrypt2 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.615) # Place this label 
 
@@ -786,7 +786,7 @@ def level3():
 
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
-        if userDecrypt3.isspace() == True: # If the user's answer only contains spaces 
+        if userDecrypt3.isspace() == True or userDecrypt3 == "": # If the user's answer only contains spaces 
             incorrect_label.place_forget()
             invalid_label.place(relx=0.425, rely=0.815) # Place this label 
         
