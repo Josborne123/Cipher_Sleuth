@@ -103,6 +103,10 @@ def usernameScreen(level):
 
 
     def validateUsername(): # Validating Username function
+
+        invalidUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Username already taken. Please enter another.", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424")) # Label for when username is taken
+        blankUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Invalid username. Please enter another", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424")) # Label for when username is left blank
+
         global userUsername 
         userUsername = usernameEntry_entry.get() 
 
@@ -120,9 +124,13 @@ def usernameScreen(level):
         for i in results:
             userNameArray.append(i[0]) # Looping through the results and storing them in an array
 
-        if userUsername in userNameArray: # If username is taken, tell the user to re-enter
-            invalidUsername_label = customtkinter.CTkLabel(usernameScreen_window, text="Username already taken. Please enter another.", font=("Comic Sans MS", 17), fg_color=("#EBEBEA", "#252424"))
-            invalidUsername_label.place(relx=0.5, rely=0.75, anchor="center")            
+        if userUsername.isspace() == True: # If the userUsername is made up only of spaces (input validation)
+            invalidUsername_label.place_forget() # Remove this label 
+            blankUsername_label.place(relx=0.5, rely=0.75, anchor="center") # Place this label 
+
+        elif userUsername in userNameArray: # If username is taken, tell the user to re-enter
+            blankUsername_label.place_forget() # Remove this label
+            invalidUsername_label.place(relx=0.5, rely=0.75, anchor="center") # Place this label          
         
         elif userUsername not in userNameArray:
             storeUsername(userUsername) # If the username is valid (not already taken) then call the function to store it in the database
@@ -274,13 +282,19 @@ def level1():
         encryptedMessage3_label.configure(text=f"Encrypted Message 3 - {encryptedSentence3} - Hint: Shifted by {shiftM3}")
         hint3_button.place_forget()
 
-    # If the user guesses wrong then this label will display
-    incorrect_label = customtkinter.CTkLabel(level1_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    incorrect_label = customtkinter.CTkLabel(level1_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # If the user guesses wrong then this label will display
+    invalid_label = customtkinter.CTkLabel(level1_window, text="Invalid input", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Label for when the user only enters spaces (input validation)
 
     # Following 3 procedures will check if the user's guess is correct
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
-        if userDecrypt1 == unencryptedMessage1: # If the user's answer is correct
+
+        if userDecrypt1.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.415) # Place this label 
+
+        elif userDecrypt1 == unencryptedMessage1: # If the user's answer is correct
+            invalid_label.place_forget() # Remove this label
             checkMessage1_button.place_forget() # Remove the "Check" button
             hint1_button.place_forget() # Remove the "hint" button
             correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Display correct to the screen
@@ -291,7 +305,9 @@ def level1():
             pygame.mixer.music.play(loops=0) # Playing sounds
             updateScoreLabel(score)
             incorrect_label.place_forget() # Remove incorrect label if it is displayed.
+
         else: # If user is not correct
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
             score = int(score / 2)# Update score
             pygame.mixer.music.load("audio/wrong.mp3") # Loading Sounds
@@ -301,7 +317,13 @@ def level1():
 
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
-        if userDecrypt2 == unencryptedMessage2:
+
+        if userDecrypt2.isspace() == True: # If the user's answer only contains spaces
+            incorrect_label.place_forget() # Remove this label
+            invalid_label.place(relx=0.425, rely=0.615) # Place this label 
+
+        elif userDecrypt2 == unencryptedMessage2:
+            invalid_label.place_forget() # Remove this label
             checkMessage2_button.place_forget()
             hint2_button.place_forget()
             correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
@@ -312,7 +334,9 @@ def level1():
             incorrect_label.place_forget()
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
+
         else:
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.615)
             score = int(score / 2)
             updateScoreLabel(score)
@@ -322,7 +346,13 @@ def level1():
 
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
-        if userDecrypt3 == unencryptedMessage3:
+
+        if userDecrypt3.isspace() == True: # If the user's answer only contains spaces
+            incorrect_label.place_forget() # Remove this label
+            invalid_label.place(relx=0.425, rely=0.815) # Place this label 
+
+        elif userDecrypt3 == unencryptedMessage3:
+            invalid_label.place_forget()
             checkMessage3_button.place_forget()
             hint3_button.place_forget()
             correct_label = customtkinter.CTkLabel(level1_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
@@ -333,7 +363,9 @@ def level1():
             incorrect_label.place_forget()
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
+
         else:
+            invalid_label.place_forget()
             incorrect_label.place(relx=0.425, rely=0.815)
             score = int(score / 2)
             updateScoreLabel(score)
@@ -463,13 +495,20 @@ def level2():
     def updateScoreLabel(score): # Update score to screen
         score_label.configure(text=f"Score: {int(score)}")
 
-    # If the user guesses wrong then this label will display
-    incorrect_label = customtkinter.CTkLabel(level2_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    incorrect_label = customtkinter.CTkLabel(level2_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Label for when the user gets the answer wrong
+    invalid_label = customtkinter.CTkLabel(level2_window, text="Invalid input", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Label for when the user only enters spaces (input validation)
+
 
     # Following 3 procedures will check if the user's guess is correct
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
-        if userDecrypt1 == unencryptedMessage1: # If the user is correct
+
+        if userDecrypt1.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.415) # Place this label 
+
+        elif userDecrypt1 == unencryptedMessage1: # If the user is correct
+            invalid_label.place_forget() # Remove this label
             checkMessage1_button.place_forget() # Remove the "Check" button
             correct_label = customtkinter.CTkLabel(level2_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Display correct to the screen
             correct_label.place(relx=0.685, rely=0.375)
@@ -479,7 +518,9 @@ def level2():
             incorrect_label.place_forget()
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
+
         else: # If user is not correct
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
             score = int(score / 2) # Update score
             updateScoreLabel(score)
@@ -489,7 +530,13 @@ def level2():
 
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
-        if userDecrypt2 == unencryptedMessage2:
+
+        if userDecrypt2.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.615) # Place this label 
+
+        elif userDecrypt2 == unencryptedMessage2:
+            invalid_label.place_forget() # Remove this label
             checkMessage2_button.place_forget()
             correct_label = customtkinter.CTkLabel(level2_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.575)
@@ -499,7 +546,9 @@ def level2():
             incorrect_label.place_forget()
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
+
         else:
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.615)
             score = int(score / 2)
             updateScoreLabel(score)
@@ -509,7 +558,13 @@ def level2():
 
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
-        if userDecrypt3 == unencryptedMessage3:
+
+        if userDecrypt3.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.815) # Place this label 
+
+        elif userDecrypt3 == unencryptedMessage3:
+            invalid_label.place_forget() # Remove this label
             checkMessage3_button.place_forget()
             correct_label = customtkinter.CTkLabel(level2_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.775)
@@ -520,6 +575,7 @@ def level2():
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
         else:
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.815)
             score = int(score / 2)
             updateScoreLabel(score)
@@ -669,13 +725,20 @@ def level3():
     def updateScoreLabel(score): # Update score to screen
         score_label.configure(text=f"Score: {int(score)}")
 
-    # If the user guesses wrong then this label will display
-    incorrect_label = customtkinter.CTkLabel(level3_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
+    incorrect_label = customtkinter.CTkLabel(level3_window, text="Incorrect, try again!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # If the user guesses wrong then this label will display
+    invalid_label = customtkinter.CTkLabel(level3_window, text="Invalid input", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Label for when the user only enters spaces (input validation)
+
 
     # Following 3 procedures will check if the user's guess is correct
     def checkAnswer1():
         userDecrypt1 = userDecrypt1_entry.get() # Storing the user's guess in a variable
-        if userDecrypt1 == unencryptedMessage1: # If the user is correct
+
+        if userDecrypt1.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.415) # Place this label 
+
+        elif userDecrypt1 == unencryptedMessage1: # If the user is correct
+            invalid_label.place_forget() # Remove this label
             checkMessage1_button.place_forget() # Remove the "Check" button
             correct_label = customtkinter.CTkLabel(level3_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424")) # Display correct to the screen
             correct_label.place(relx=0.685, rely=0.375)
@@ -685,7 +748,9 @@ def level3():
             incorrect_label.place_forget()
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
+
         else: # If user is not correct
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.415) # Display incorrect label
             score = int(score / 2) # Update score
             updateScoreLabel(score)
@@ -694,7 +759,13 @@ def level3():
 
     def checkAnswer2():
         userDecrypt2 = userDecrypt2_entry.get()
-        if userDecrypt2 == unencryptedMessage2:
+
+        if userDecrypt2.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.615) # Place this label 
+
+        elif userDecrypt2 == unencryptedMessage2:
+            invalid_label.place_forget() # Remove this label
             checkMessage2_button.place_forget()
             correct_label = customtkinter.CTkLabel(level3_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.575)
@@ -705,6 +776,7 @@ def level3():
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
         else:
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.615)
             score = int(score / 2)
             updateScoreLabel(score)
@@ -714,7 +786,12 @@ def level3():
 
     def checkAnswer3():
         userDecrypt3 = userDecrypt3_entry.get()
-        if userDecrypt3 == unencryptedMessage3:
+        if userDecrypt3.isspace() == True: # If the user's answer only contains spaces 
+            incorrect_label.place_forget()
+            invalid_label.place(relx=0.425, rely=0.815) # Place this label 
+        
+        elif userDecrypt3 == unencryptedMessage3:
+            invalid_label.place_forget() # Remove this label
             checkMessage3_button.place_forget()
             correct_label = customtkinter.CTkLabel(level3_window, text="Correct!", font=("Comic Sans MS", 18), fg_color=("#EBEBEA", "#252424"))
             correct_label.place(relx=0.685, rely=0.775)
@@ -724,7 +801,9 @@ def level3():
             incorrect_label.place_forget()
             pygame.mixer.music.load("audio/success.mp3") # Loading Sounds
             pygame.mixer.music.play(loops=0) # Playing sounds
+
         else:
+            invalid_label.place_forget() # Remove this label
             incorrect_label.place(relx=0.425, rely=0.815)
             score = int(score / 2)
             updateScoreLabel(score)
